@@ -26,6 +26,13 @@ async function init() {
         if (!response.ok) throw new Error("Failed to load data.");
         icdData = await response.json();
         
+        // Sort alphanumerically by ICD Code
+        icdData.sort((a, b) => {
+            const codeA = (a["ICD Code"] || a["Code"] || "").toUpperCase();
+            const codeB = (b["ICD Code"] || b["Code"] || "").toUpperCase();
+            return codeA.localeCompare(codeB, undefined, { numeric: true, sensitivity: 'base' });
+        });
+        
         loadingIndicator.classList.add('hidden');
         renderList(icdData);
 
