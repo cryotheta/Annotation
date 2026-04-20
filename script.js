@@ -38,13 +38,15 @@ async function init() {
 }
 
 // Render list into Sidebar
-function renderList(data) {
+function renderList(data, limit = 100) {
     icdListEl.innerHTML = '';
     
     // Use Fragment for performance
     const fragment = document.createDocumentFragment();
     
-    data.forEach((item, index) => {
+    const itemsToRender = data.slice(0, limit);
+    
+    itemsToRender.forEach((item, index) => {
         const li = document.createElement('li');
         li.className = 'icd-item';
         // Check structural differences to handle keys correctly. The JSON had "ICD Code" or "Code"
@@ -61,6 +63,23 @@ function renderList(data) {
         
         fragment.appendChild(li);
     });
+    
+    if (data.length > limit) {
+        const hint = document.createElement('li');
+        hint.style.textAlign = "center";
+        hint.style.padding = "10px";
+        hint.style.fontSize = "0.8rem";
+        hint.style.color = "var(--text-muted)";
+        hint.textContent = `Showing ${limit} of ${data.length} results. Use search for more.`;
+        fragment.appendChild(hint);
+    } else if (data.length === 0) {
+        const empty = document.createElement('li');
+        empty.style.textAlign = "center";
+        empty.style.padding = "20px";
+        empty.style.color = "var(--text-muted)";
+        empty.textContent = "No results found.";
+        fragment.appendChild(empty);
+    }
     
     icdListEl.appendChild(fragment);
 }
