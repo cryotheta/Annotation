@@ -20,11 +20,7 @@ document.addEventListener('DOMContentLoaded', init);
 
 async function init() {
     try {
-        loadingIndicator.classList.remove('hidden');
-        // Fetch data
-        const response = await fetch('data/icd_10.json');
-        if (!response.ok) throw new Error("Failed to load data.");
-        icdData = await response.json();
+        icdData = window.ICD_DATA || [];
         
         // Sort alphanumerically by ICD Code
         icdData.sort((a, b) => {
@@ -40,7 +36,7 @@ async function init() {
         searchInput.addEventListener('input', handleSearch);
     } catch (e) {
         console.error(e);
-        loadingIndicator.innerHTML = `<p style="color:var(--accent);">Error loading data. Make sure you are running a local server.</p>`;
+        loadingIndicator.innerHTML = `<p style="color:var(--accent);">Error loading data.</p>`;
     }
 }
 
